@@ -30,10 +30,73 @@ def create_new_offer(offers, products, customers):
     Prompt user to create a new offer by selecting a customer, entering date,
     choosing products, and calculating totals.
     """
+    
+    customer_insert = load_data(CUSTOMERS_FILE)
+
+    print()
+    print('Odaberi redni broj dolje navedenih kupaca: ')
+    print()
+    for i, customer in enumerate(customer_insert):
+        print(f'{i +1}. {customer['name']} ')
+
+    
+    try:
+        customer_choice = int(input('Odaberi redni broj kupca: '))
+        selected_customer = customers[customer_choice - 1]
+        print(f'Odabrali ste kupca: {selected_customer['name']} ({selected_customer['email']}) {selected_customer['vat_id']}')
+
+    except Exception as ex:
+        print(f'Greška {ex} Odabrali ste nepostojeći redni broj kupca.')
+
+
+
+    print()
+    print('Odaberite proizvod koji želite u ponudi')
+    print()
+    
+    offer_products = []
+    while True:
+        for i, product in enumerate(products):
+            print(f'{i + 1}. {product['name']} podjednačna cijena {product['price']} EUR')
+        try:
+            product_choice = int(input('Odaberite redni broj proizvoda 0 je izlazak: '))
+            if product_choice == 0:
+                break
+            selected_product = products[product_choice - 1]
+            quantity = int(input(f'Unesite količinu za proizvod {selected_product['name']}: '))
+            product_total = selected_product['price'] * quantity
+            offer_products.append({
+                    "product_id": selected_product['id'],
+                    "product_name": selected_product['name'],
+                    "description": selected_product['description'],
+                    "price": selected_product['price'],
+                    "quantity": quantity,
+                    "item_total": product_total
+                })
+        except Exception as ex:
+                print('Dogodila se greška, Ponovno odaberite proizvod.')
+
+    # Izračunaj ukupno
+     
+    sub_total = 0
+    for item in offer_products:
+        sub_total += product_total['item_total']
+    
+    print(f'Subtotal: {sub_total} EUR')
+    tax = sub_total * 0.25
+    print(f'tax: {tax}')
+    
+    total = sub_total + tax
+    print(f'total: {total} EUR')
+
     # Omogućite unos kupca
+    # Print liste kupaca -> kupac upise broj ispred a vi onda pokupite podatke
+    # while petlja 
     # Izračunajte sub_total, tax i total
+    # Možda dodati novu funkciju koa ručuna total, tax i
+    # total = calculate_total()
     # Dodajte novu ponudu u listu offers
-    pass
+    
 
 
 # TODO: Implementirajte funkciju za upravljanje proizvodima.
@@ -41,6 +104,7 @@ def manage_products(products):
     """
     Allows the user to add a new product or modify an existing product.
     """
+
     # Omogućite korisniku izbor između dodavanja ili izmjene proizvoda
     # Za dodavanje: unesite podatke o proizvodu i dodajte ga u listu products
     # Za izmjenu: selektirajte proizvod i ažurirajte podatke
@@ -109,6 +173,7 @@ def main():
             break
         else:
             print("Krivi izbor. Pokusajte ponovno.")
+    return products
 
 
 if __name__ == "__main__":
