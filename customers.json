@@ -48,5 +48,10 @@
         "name": "Bright Ideas",
         "email": "info@brightideas.com",
         "vat_id": "90123456789"
+    },
+    {
+        "name": "Smart Planet",
+        "email": "smartplanet@gmail",
+        "vat_id": "234657"
     }
 ]

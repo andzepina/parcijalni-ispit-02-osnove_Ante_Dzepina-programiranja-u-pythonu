@@ -79,8 +79,8 @@ def create_new_offer(offers, products, customers):
     # Izračunaj ukupno
      
     sub_total = 0
-    for item in offer_products:
-        sub_total += product_total['item_total']
+    for product in offer_products:
+        sub_total += product['item_total']
     
     print(f'Subtotal: {sub_total} EUR')
     tax = sub_total * 0.25
@@ -96,6 +96,27 @@ def create_new_offer(offers, products, customers):
     # Možda dodati novu funkciju koa ručuna total, tax i
     # total = calculate_total()
     # Dodajte novu ponudu u listu offers
+
+    # Kreiraj novu podnudu
+    new_offer = len(offers) + 1
+    print()
+    print('NOVA PONUDA')
+    print()
+    try:
+        offer = {
+            'offer_number': new_offer,
+            'customer': selected_customer,
+            'date': input('Unesite datum ponude (Godina-Mjesec-Dan): '),
+            'items': offer_products,
+            'sub_total': sub_total,
+            'tax': tax,
+            'total': total
+        }
+        offers.append(offer)
+        print('Ponuda uspješno kreirana!')
+        print_offer(offer)
+    except Exception as ex:
+        print(f'Dogodila se pogreška {ex}')
     
 
 
@@ -104,11 +125,58 @@ def manage_products(products):
     """
     Allows the user to add a new product or modify an existing product.
     """
+    print()
+    print('UPRAVLJANJE PROIZVODIMA')
+    print()
+    print('1. Dodaj novi proizvod')
+    print('2. Izmijeni postojeći proizvod')
+
+    change_add_product = int(input('Odaberi broj opcije: '))
+
+    match change_add_product:
+        case 1:
+            try:
+                id = len(products) + 1
+                name = input('Unesite naziv proizvoda: ')
+                description = input('Upisite opis proizvoda: ')
+                price = float(input('Unesite cijenu proizvoda: '))
+
+                new_product ={
+                    'id': id,
+                    'name': name,
+                    'description': description,
+                    'price': price
+                }
+                products.append(new_product)
+
+                save_data(PRODUCTS_FILE, products)
+            except Exception as ex:
+                print(f'Dogodila se pogreška: {ex}')
+        case 2:
+            print()
+            for i, product in enumerate(products):
+                print(f'{i + 1}. {product['name']}')
+            print()
+
+            try:
+                product_choice = int(input('Odaberite proizvod za izmjenu: '))
+                selected_product = products[product_choice - 1]
+                selected_product['name'] = input(f"Unesite novi naziv (trenutno: {selected_product['name']}): ")
+                selected_product['description'] = input(f"Unesite novi opis (trenutno: {selected_product['description']}): ")
+                selected_product['price'] = float(input(f"Unesite novu cijenu (trenutno: {selected_product['price']}): "))
+
+                save_data(PRODUCTS_FILE, products)
+            
+            except Exception as ex:
+                print(f'Dogodila se pogreška {ex}')
+        
+        case _:
+            print('Krivo ste odabrali opciju Upravljanja proizvodom')
 
     # Omogućite korisniku izbor između dodavanja ili izmjene proizvoda
     # Za dodavanje: unesite podatke o proizvodu i dodajte ga u listu products
     # Za izmjenu: selektirajte proizvod i ažurirajte podatke
-    pass
+    #pass
 
 
 # TODO: Implementirajte funkciju za upravljanje kupcima.
@@ -116,9 +184,47 @@ def manage_customers(customers):
     """
     Allows the user to add a new customer or view all customers.
     """
+    print()
+    print('UPRAVLJANJE KUPCIMA')
+    print()
+    print('1. Unesite podatke o novom kupcu')
+    print('2. Prikaz svih kupaca')
+    print()
+
+    choice = int(input('Odaberi opciju Upravljanja kupcima: '))
+
+    match choice:
+        case 1:
+            try:
+                name = input('Unesite naziv kupca: ')
+                email = input('Unesite email adresu kupca: ')
+                vat_id = input('Unesite OIB kupca: ')
+                new_customer = {
+                    'name': name,
+                    'email': email,
+                    'vat_id': vat_id
+                }
+                customers.append(new_customer)
+                save_data(CUSTOMERS_FILE, customers)
+            except Exception as ex:
+                print(f'Dogodila se greška {ex}.')
+            
+        case 2:
+            try:
+                print('Popis svih kupaca:')
+                print()
+                for i, customer in enumerate(customers):
+                    print(f'{i + 1} {customer['name']} {customer['email']} vat_id: {customer['vat_id']}')
+
+            except Exception as ex:
+                print(f'Dogodila se pogreška {ex}')
+        case _:
+            print('Krivo ste odabrali opciju Upravljanje kupcima')
+
+
     # Za dodavanje: omogući unos imena kupca, emaila i unos VAT ID-a
     # Za pregled: prikaži listu svih kupaca
-    pass
+    #pass
 
 
 # TODO: Implementirajte funkciju za prikaz ponuda.
@@ -126,9 +232,53 @@ def display_offers(offers):
     """
     Display all offers, offers for a selected month, or a single offer by ID.
     """
+    print()
+    print('PREGLED PONUDA')
+    print()
+    print('1. Prikaz svih ponuda')
+    print('2. Prikaz ponuda za odabrani mjesec')
+    print('3. Prikaz ponuda prema željenom ID-u')
+    print()
+
+    offers_choice = int(input('Selektirajte redni broj gore prikaznih opcija: '))
+
+    match offers_choice:
+        case 1:
+            print(offers)
+        case 2:
+            month = input('Upisite mjesec za koji želite pretražiti pounde, zapis (Godina-Mjesec): ')
+            selected_month = []
+            for offer in offers:
+                if offer['date'].startswith(month):
+                    selected_month.append(offer)
+                    print(selected_month)
+    
+        case 3:
+            offer_id = int(input('Unesite ID ponude koju želite pregledati: '))
+            selected_id_offer = None
+
+            for offer in offers:
+                if offer['offer_number'] == offer_id:
+                    selected_id_offer = offer
+                    break
+            try:
+                print('-'*40)
+                print(selected_id_offer)
+                print('-'*40)
+
+            except Exception as ex:
+                print(f'Dogodila se greška{ex} Ponuda pod tim ID-om nije pronađena')
+        
+        case _:
+            print('Krivo odabrana opcija pregleda PONUDA')
+
+
     # Omogućite izbor pregleda: sve ponude, po mjesecu ili pojedinačna ponuda
     # Prikaz relevantnih ponuda na temelju izbora
-    pass
+    
+    
+    
+    #pass
 
 
 # Pomoćna funkcija za prikaz jedne ponude

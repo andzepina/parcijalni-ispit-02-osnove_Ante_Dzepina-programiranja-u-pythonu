@@ -88,5 +88,11 @@
         "name": "Gaming Console",
         "description": "4K HDR, 1TB storage",
         "price": 400.0
+    },
+    {
+        "id": 16,
+        "name": "External hard disc",
+        "description": "USB 2.0",
+        "price": 145.0
     }
 ]
