@@ -17,4 +17,4 @@ class Product:
 
 
     def __rpr__(self) -> str:
-        return f'str Naziv: {self.name}'
+        return f' Naziv: {self.name}'
