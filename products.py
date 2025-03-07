@@ -10,11 +10,6 @@ class Product:
         self.price = price
         self.description = description
 
-    # def display(self):
-    #     print(f'Naziv: {self.name}')
     
-    
-
-
-    def __rpr__(self) -> str:
-        return f' Naziv: {self.name}'
+    def __repr__(self) -> str:
+        return f'{self.name}'

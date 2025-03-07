@@ -42,9 +42,9 @@ def main():
 
     customers.append(tech_solution)
 
-    # print(tech_solution)
+    print(tech_solution)
 
-    # print(customers)
+    print(customers)
 
 if __name__ =='__main__':
     main()
