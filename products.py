@@ -10,8 +10,8 @@ class Product:
         self.price = price
         self.description = description
 
-    def display(self):
-        print(f'Naziv: {self.name}')
+    # def display(self):
+    #     print(f'Naziv: {self.name}')
     
     
 
